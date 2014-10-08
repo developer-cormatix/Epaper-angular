@@ -1,0 +1,66 @@
+<!doctype html>
+<html ng-app="Freader">
+	<head>
+		<title>Freader</title>
+		<script type="text/javascript">page_no = {{PageNo}};</script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
+        <script src="jquery-1.6.2.min.js"></script>
+
+        <script src="angular.min.js"></script>
+		<script src="angular-resource.min.js"></script>
+		<script src="webapp.js"></script>
+        <link rel="stylesheet" type="text/css"  href="epaper.css">
+
+
+		<meta charset="utf-8">
+	</head>
+	<body ng-view>
+		<script type="text/ng-template" id="loginView">
+			<div class="container login-screen" id="loginView" ng-controller="loginCtrl">
+
+				<div class="login-icon">
+					<img src="images/icon.png" alt="Welcome to Freader">
+					<h4>Welcome to <small>Freader</small></h4>
+				</div>
+				<form ng-submit="action()" class="login-form" name="actionForm">
+					<p class="errorMsg">{{errorMsg}}</p>
+					<div class="control-group">
+						<input type="email" class="login-field" id="login-name" placeholder="Email" ng-model="email" required>
+						<label class="login-field-icon fui-user" for="login-name"></label>
+					</div>
+					<div class="control-group">
+						<input type="password" class="login-field" id="login-pass" placeholder="Password" ng-model="password" required>
+						<label class="login-field-icon fui-lock" for="login-pass"></label>
+					</div>
+					<input type="submit" value="{{text.action}}" ng-disabled="actionForm.$invalid" class="btn btn-primary btn-large btn-block">
+					<a ng-click="changeAction()" class="actionChange">{{text.changeAction}}</a>
+				</form>
+
+			</div>
+		</script>
+        <script type="text/ng-template" id="epaper">
+            <div class="container" id="epaper" ng-controller="epaperCtrl" ng-init="initialize()">
+                <div class="edition-date-container">
+                    <div class="edition_container">
+                        Editions :<select class="list_edition" ng-model="myedition" ng-options="edition for edition in editions" ng-change="edition_change()"></select>
+                    </div>
+                    <div class="date_container">
+                        Date :
+                        <select class="list_date" ng-model="mydate" ng-options="date for date in dates" ng-change="date_change()"></select>
+                    </div>
+                    <button ng-click="load_page()" class="date_button">Go</button>
+                </div>
+                <div class="outer_container" >
+                    <div class="thumbnail_holder">
+
+                    </div>
+                    <div class="page_holder">
+                    </div>
+                </div>
+            </div>
+        </script>
+
+
+		
+
+	</body>
+</html>

@@ -1,0 +1,58 @@
+body,html{
+    width:100%;
+    height:100%;
+    background-color: lightgrey;
+}
+.container{
+    width:100%;
+    height:100%;
+}
+.edition-date-container{
+    width:100%;
+    height:10%;
+    background-color: lightgrey;
+}
+
+.date_button{
+    width:50px;
+    height: 30px;
+    position: relative;
+    top: 20px;
+    left:70%;
+}
+
+.edition_container{
+    position: relative;
+    top:20px;
+    float: left;
+}
+.date_container{
+    position: relative;
+    top:20px;
+    float: left;
+    padding-left: 30px;
+}
+.outer_container{
+    width:100%;
+    height:100%;
+}
+.thumbnail_holder{
+    position: relative;
+    background-color: darkgrey;
+    width:15%;
+    height:100%;
+    overflow-y: scroll;
+    padding-left: 10px;
+    float:left;
+ }
+.page_holder{
+    position: relative;
+    left: 2%;
+    background-color: darkgray;
+    float:left;
+    width:80%;
+    height:100%;
+    ;
+    overflow-y: scroll;
+}
+
