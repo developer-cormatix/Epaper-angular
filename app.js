@@ -13,8 +13,15 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({secret: config.cookieSecret}));
 app.use(express.static(__dirname + '/webapp'));
+app.use(express.static(config.json_path));
 app.use(app.router);
 
+/*
+**Epaper Data routes(get editions, dates,path);
+ */
+
+var epaper=require(__dirname+'/epaper_data.js');
+epaper.createRoutes(app);
 
 
 /*

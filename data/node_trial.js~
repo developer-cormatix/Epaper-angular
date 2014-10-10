@@ -1,0 +1,8 @@
+console.log(":started");
+var fs = require('fs');
+var data=fs.readFileSync(__dirname+'/edition.json')
+ 
+  console.log(data);
+  var y=JSON.parse(data);
+  console.log(y[0]['edition']);
+	

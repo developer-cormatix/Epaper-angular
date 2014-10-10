@@ -38,8 +38,8 @@
 			</div>
 		</script>
         <script type="text/ng-template" id="epaper">
-            <div class="container" id="epaper" ng-controller="epaperCtrl" ng-init="initialize()">
-                <div class="edition-date-container">
+            <div class="container" id="epaper" ng-controller="epaperCtrl" >
+                <div class="edition-date-container" ng-init="initialize()">
                     <div class="edition_container">
                         Editions :<select class="list_edition" ng-model="myedition" ng-options="edition for edition in editions" ng-change="edition_change()"></select>
                     </div>
@@ -49,9 +49,21 @@
                     </div>
                     <button ng-click="load_page()" class="date_button">Go</button>
                 </div>
+                {{text}}
                 <div class="outer_container" >
-                    <div class="thumbnail_holder">
+                    <div class="thumbnail_section_holder">
+                        <div class="section_holder">
+                            <p class=""section-text">{{section_text}}</p>
+                            <select class="list_section" ng-model="mysection" ng-options="section for section in sections" ng-change="section_change()"></select>
 
+                        </div>
+                        <div class="thumbnail_holder">
+
+                            <div class=""thumbnails" ng-repeat="page in pages">
+                                <img class="thumbs" src="{{path_name+page.thumbnail}}" ng-click="load_orignal_page({{page.page_no}})"/>
+                                <p class="page_no">{{page.page_no}}</p></br>
+                            </div>
+                        </div>
                     </div>
                     <div class="page_holder">
                     </div>

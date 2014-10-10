@@ -15,33 +15,180 @@ angular.module('Freader', ['backend'])
 function epaperCtrl($scope,$resource,$location)
 {
     $scope.text="sndkjnsfdfjs";
-    var list_editions=["blr","chn"];
+    var list_editions;
     var list_dates=["30092014","29092014"];
-    $scope.editions=list_editions;
-    $scope.myedition=$scope.editions[0];
-    $scope.dates=list_dates
+    var edition_json;
+    var date_json;
+    $scope.dates=list_dates;
     $scope.mydate=$scope.dates[0];
-    $scope.intialize=function(){
-        $scope.text="connected1";
+    $scope.pages;// contains all pages of a section
+    $scope.path_name;
+
+
+    var getKeys = function(obj){
+        alert('funciton');
+        var keys = [];
+        for(var key in obj){
+           alert(key);
+        }
+        return keys;
     }
-    $scope.load_page=function(){
-        alert("laoding the required page"+"\nedition : "+$scope.myedition+"\ndate: "+$scope.mydate);
-      
+    $scope.text="connecting";
+
+    //load dates for corresponding edition
+    function get_dates()
+    {
+        var load_dates_resource = $resource('/api/edition_dates');
+        load_dates_resource.query({edition: $scope.myedition}, function (data) {
+            // success handler
+            edition_json=data;
+            list_dates = [];
+            for (var x in data) {
+                list_dates.push(data[x]['date']);
+            }
+            $scope.dates = list_dates;
+            $scope.mydate = $scope.dates[0];
+
+        }, function (error) {
+            alert("Error ");
+            alert(error);
+            // error handler
+        });
+    }
+
+    //list all editions from the edition.json
+    function load_edition()
+    {
+        var get_edition_resource = $resource('/api/get_edition');
+        get_edition_resource.query(function(data) {
+            // success handler
+            list_editions=[];
+            for(var x in data)
+            {
+                for (var y in data[x]['edition'])
+                    list_editions.push(data[x]['edition'][y]);
+            }
+            $scope.editions=list_editions;
+            $scope.myedition=$scope.editions[0];
+            get_dates();
+        }, function(error) {
+            alert("Error ");
+            alert(error);
+            // error handler
+        });
 
     }
+
+    //get json file contents for a particular date
+    function get_date_json()
+    {
+        var date_json_file_name;
+        var date_json_path;
+        for(var k=0;k<edition_json.length;k++)
+        {
+            if(edition_json[k]['date']==$scope.mydate)
+            {
+                date_json_file_name=edition_json[k]['file_name'];
+                date_json_path=edition_json[k]['path'];
+                break;
+            }
+        }
+        //alert(date_json_file_name+" "+date_json_path);
+        var get_date_json_resource = $resource('/api/date_json');
+        //{'date':$scope.mydate,'file_name':date_json_file_name,'path_name':date_json_path}
+        get_date_json_resource.query({'date':$scope.mydate,'file_name':date_json_file_name,'path_name':date_json_path},
+            function(data) {
+            // success handler
+                //alert("success");
+                date_json=data;
+                load_sections();
+
+        }, function(error) {
+            // error handler
+            alert("Error ");
+            alert(error);
+
+        });
+    }
+
+    function load_sections()
+    {
+        $scope.sections;
+        $scope.mysection;
+        //load the sections for a particular date
+        //alert("load_sections");
+        $scope.sections=[];
+
+        //alert(date_json["date"]);
+        for(var k=0;k<date_json.length;k++)
+        {
+            //alert(date_json[k]["section_name"]);
+            $scope.sections.push(date_json[k]["section_name"]);
+        }
+        if($scope.sections.length==0)
+        {
+            alert("error");
+        }
+        else{
+            $scope.mysection=$scope.sections[0];
+            $scope.section_text="Sections :";
+            //load the sections in the left main tab
+            load_thumbnails($scope.mysection);
+        }
+    }
+
+
+
+    function load_thumbnails(section)
+    {
+        //alert("load_thumbnails");
+        //alert(date_json.length);
+        for(var k=0;k<date_json.length;k++)
+        {
+            if(date_json[k]["section_name"]==section)
+            {
+                $scope.path_name=date_json[k]["path"];
+                //alert("section matched");
+                $scope.pages=date_json[k]["pages"];
+
+            }
+        }
+
+        //search the sections in date_json
+        //get list_of pages & load thumbnails . Also load the first page
+
+    }
+
+    $scope.initialize=function(){
+        $scope.text="connected1";
+        load_edition();
+    }
+
+    $scope.load_orignal_page=function(a)
+    {
+        alert("clicke");
+        alert(a);
+    }
+    $scope.load_page=function(){
+        //alert("laoding the required page"+"\nedition : "+$scope.myedition+"\ndate: "+$scope.mydate+"\n "+date_json_file_name+" "+ date_json_path);
+        get_date_json();
+        //alert("loading json for reqested date");
+    }
+
+    $scope.section_change=function(){
+        alert("section_chang");
+        alert($scope.mysection);
+        load_thumbnails($scope.mysection);
+    }
+
     $scope.edition_change=function(){
-        alert("edition changed");
-        alert($scope.myedition);
         //load dates
-        /*
-        list_dates=//oad date;
-        $scope.dates=list_dates;
-        $scope.mydate=$scope.dates[0];
-        */
+        get_dates();
+
     }
     $scope.date_change=function(){
-        alert("date changed");
-        alert("new date:"+$scope.mydate);
+        //alert("date changed");
+        //alert("new date:"+$scope.mydate);
     }
 }
 
