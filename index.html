@@ -1,47 +1,144 @@
 <!doctype html>
 <html ng-app="Freader">
 	<head>
-		<title>Freader</title>
+		<title>E-paper</title>
 		<script type="text/javascript">page_no = {{PageNo}};</script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
         <script src="jquery-1.6.2.min.js"></script>
 
         <script src="angular.min.js"></script>
 		<script src="angular-resource.min.js"></script>
 		<script src="webapp.js"></script>
-        <link rel="stylesheet" type="text/css"  href="epaper.css">
+        <link rel="stylesheet" type="text/css"  href="epaper-style.css">
 
 
 		<meta charset="utf-8">
 	</head>
 	<body ng-view>
-		<script type="text/ng-template" id="loginView">
-			<div class="container login-screen" id="loginView" ng-controller="loginCtrl">
 
-				<div class="login-icon">
-					<img src="images/icon.png" alt="Welcome to Freader">
-					<h4>Welcome to <small>Freader</small></h4>
-				</div>
-				<form ng-submit="action()" class="login-form" name="actionForm">
-					<p class="errorMsg">{{errorMsg}}</p>
-					<div class="control-group">
-						<input type="email" class="login-field" id="login-name" placeholder="Email" ng-model="email" required>
-						<label class="login-field-icon fui-user" for="login-name"></label>
-					</div>
-					<div class="control-group">
-						<input type="password" class="login-field" id="login-pass" placeholder="Password" ng-model="password" required>
-						<label class="login-field-icon fui-lock" for="login-pass"></label>
-					</div>
-					<input type="submit" value="{{text.action}}" ng-disabled="actionForm.$invalid" class="btn btn-primary btn-large btn-block">
-					<a ng-click="changeAction()" class="actionChange">{{text.changeAction}}</a>
-				</form>
-
-			</div>
-		</script>
         <script type="text/ng-template" id="epaper">
+            <body ng-controller="epaperCtrl">
+            <table width="1230" border="0" align="center" cellpadding="0" cellspacing="0" ng-init="initialize()"  >
+                <tr>
+                    <td height="28" align="left" class="sub-nav"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="206" height="28"><img src="images/choose-page.jpg" width="22" height="22" hspace="5" align="absmiddle" />CHOOSE PAGE</td>
+                            <td width="2"><img src="images/divider.jpg" width="2" height="28" /></td>
+                            <td width="275"><table width="250" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td><img src="images/archive.jpg" width="22" height="22" hspace="5" /></td>
+                                    <td>EDITION</td>
+                                    <td><select name="textfield2" type="text" class="dropdown-input" id="textfield2" ng-model="myedition" ng-options="edition for edition in editions" ng-change="edition_change()" /></td>
+                                </tr>
+                            </table></td>
+                            <td width="2"><img src="images/divider.jpg" width="2" height="28" /></td>
+                            <td width="200"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="32"><img src="images/choose-page.jpg" width="22" height="22" hspace="5" align="absmiddle" /></td>
+                                    <td><a href='{{path_name+current_page.pdf}}' target="_blank" >{{download_text}}</a></td>
+                                </tr>
+                            </table></td>
+                            <td width="2"><img src="images/divider.jpg" width="2" height="28" /></td>
+                            <td width="225"><table border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="32"><img src="images/archive.jpg" width="22" height="22" hspace="5" /></td>
+                                    <td width="52">ARCHIVE </td>
+                                    <td width="162"><select name="textfield3" class="dropdown-input" id="textfield3" ng-model="mydate" ng-options="date for date in dates" ng-change="date_change()"/></td>
+                                </tr>
+                            </table></td>
+                            <td width="2"><img src="images/divider.jpg" width="2" height="28" /></td>
+                            <td width="251"><table width="100" border="0" cellspacing="1" cellpadding="0">
+                                <tr>
+                                    <td width="56" align="center"><img src="images/zoom-in.jpg" width="22" height="22" /></td>
+                                    <td width="41"><img src="images/zoom-out.jpg" width="22" height="21" /></td>
+                                    <td ><button ng-click="load_page()" class="date_button">Go</button></td>
+                                </tr>
+                            </table></td>
+                        </tr>
+                    </table></td>
+                </tr>
+                <tr>
+                    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="124" valign="top" class="left-bg"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td height="17" align="center" class="previous"><a href="" ng-click=prev_page()>PREVIOUS</a></td>
+                                </tr>
+                                <tr>
+                                    <td height="1475" valign="top">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="left-navbg">
+                                            <tr>
+                                                <td valign="top" class="pageno">
+                                                    <div style="height:490px; overflow-y:scroll" align="center">
+                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" ng-repeat="page in pages">
+                                                            <tr>
+                                                                <td height="23" align="center"><span class="number-bg">{{page.page_no}}</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center"><img class="thumbs" width="80" height="123" src="{{path_name+page.thumbnail}}" ng-click=load_orignal_page(page) /></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center">&nbsp;</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="leftnav-links"><select class="list_section" ng-model="mysection" ng-options="section for section in sections" ng-change="section_change()"></select></td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td class="leftnav-links">&nbsp;</td>
+                                            </tr>
+
+                                        </table></td>
+                                </tr>
+                                <tr>
+                                    <td height="17" align="center" class="previous"><a href="" ng-click=prev_page() >PREVIOUS</a></td>
+                                </tr>
+                            </table></td>
+                            <td align="center" valign="top" >
+                                <div id="loadImg" style="position: relative">
+                                    <img src="{{page_image}}"  class="mainimage-border" style="position: absolute;left: 0px;top: 0px"  >
+                                    <div class="zoning" ng-repeat="article in current_page.articles">
+                                        <div class="boundaries" ng-repeat="coord in article.coords" >
+                                            <div id="{{article.article_no}}" class="zones" style="left:{{coord[0]}}px;top:{{coord[1]}}px; height: {{coord[2]}}px; width: {{coord[3]}}px;position:absolute;" ng-click="load_article(article)" onmouseover="this.style.border= '5px solid red';" onmouseout="this.style.border= 'none';"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            </td>
+                            <td width="136" valign="top" class="left-bg"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td height="17" align="center" class="next"><a href=""  ng-click=next_page()>NEXT</a></td>
+                                </tr>
+                                <tr>
+                                    <td height="1475" align="center" valign="top" class="right-ads"><img src="images/right-ads.jpg" width="120" height="500" /></td>
+                                </tr>
+                                <tr>
+                                    <td height="17" align="center" class="next"><a href="" ng-click=next_page()>NEXT</a></td>
+                                </tr>
+                            </table></td>
+                        </tr>
+                    </table></td>
+                </tr>
+            </table></td>
+
+
+
+
+
+
+
+<!--
             <div class="container" id="epaper" ng-controller="epaperCtrl" >
                 <div class="edition-date-container" ng-init="initialize()">
                     <div class="edition_container">
-                        Editions :<select class="list_edition" ng-model="myedition" ng-options="edition for edition in editions" ng-change="edition_change()"></select>
+                        Editions :<select class="list_edition1" ng-model="myedition" ng-options="edition for edition in editions" ng-change="edition_change()"></select>
                     </div>
                     <div class="date_container">
                         Date :
@@ -68,7 +165,8 @@
                     <div class="page_holder">
                     </div>
                 </div>
-            </div>
+            </div>-->
+            </body>
         </script>
 
 

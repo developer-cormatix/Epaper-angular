@@ -1,0 +1,20 @@
+<script src="jquery-1.6.2.min.js"/>
+<table width="100%" height="100%" border="none">
+
+<tr width="100%" height="50%">
+<td width="33%"><button width="200px" onclick="load()" >text</button></td>
+<td width="33%"><button onclick="load()" width="100%" >image</button></td>
+<td width="33%"><button onclick="load()" width="100%" >pdf</button></td>
+</tr>
+
+<tr>
+<div id="article_container">
+</div>
+<script type="text/javascript">
+function load()
+{
+	$("#article_container").clear();
+}
+</script>
+</tr>
+</table>

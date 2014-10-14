@@ -22,9 +22,9 @@ function epaperCtrl($scope,$resource,$location)
     $scope.dates=list_dates;
     $scope.mydate=$scope.dates[0];
     $scope.pages;// contains all pages of a section
-    $scope.path_name;
-
-
+    $scope.path_name;//the path name for finding files
+    $scope.page_image;
+    $scope.current_page;
     var getKeys = function(obj){
         alert('funciton');
         var keys = [];
@@ -48,6 +48,7 @@ function epaperCtrl($scope,$resource,$location)
             }
             $scope.dates = list_dates;
             $scope.mydate = $scope.dates[0];
+
 
         }, function (error) {
             alert("Error ");
@@ -102,8 +103,10 @@ function epaperCtrl($scope,$resource,$location)
                 //alert("success");
                 date_json=data;
                 load_sections();
+                load_first_page();
+                $scope.download_text="Download PDF ";
 
-        }, function(error) {
+            }, function(error) {
             // error handler
             alert("Error ");
             alert(error);
@@ -166,10 +169,18 @@ function epaperCtrl($scope,$resource,$location)
 
     $scope.load_orignal_page=function(a)
     {
-        alert("clicke");
-        alert(a);
+        //loads the page content from given thumbnail
+        //alert("load page");
+        //alert(a);
+        $scope.current_page=a;
+        $scope.page_image=$scope.path_name+a.image;
     }
+
     $scope.load_page=function(){
+        /*
+        Action for GO () button
+         */
+
         //alert("laoding the required page"+"\nedition : "+$scope.myedition+"\ndate: "+$scope.mydate+"\n "+date_json_file_name+" "+ date_json_path);
         get_date_json();
         //alert("loading json for reqested date");
@@ -179,6 +190,87 @@ function epaperCtrl($scope,$resource,$location)
         alert("section_chang");
         alert($scope.mysection);
         load_thumbnails($scope.mysection);
+
+    }
+
+    function load_first_page(section)
+    {
+        //$scope.current_page=$scope.pages[0];
+        $scope.load_orignal_page($scope.pages[0])
+    }
+
+    function search_for_page_no(page_no)
+    {
+        //alert("search for page");
+        //alert($scope.pages.length);
+        var flag=false;
+        //alert(page_no);
+        for(var k=0;k<$scope.pages.length;k++)
+        {
+            if($scope.pages[k]['page_no']==page_no)
+            {
+                /*
+                Page no found ! load the page
+                 */
+                $scope.current_page=$scope.pages[k];
+                $scope.page_image=$scope.path_name+$scope.current_page['image'];
+                flag=true;
+                return;
+               // alert($scope.path_name+$scope.current_page['image']);
+            }
+        }
+        if(!flag)
+        {
+            if(page_no==0)
+                alert("You are viewing the first page!")
+            else
+                alert("You are viewing the last page!")
+        }
+    }
+
+    $scope.next_page=function()
+    {
+        /*
+        funciton handling next button clicks
+         */
+        var current_page=$scope.current_page.page_no;
+        //alert(current_page);
+        current_page++;
+        search_for_page_no(current_page);
+    }
+
+    $scope.prev_page=function()
+    {
+        /*
+         funciton handling previos page button clicks
+         */
+        var current_page=$scope.current_page.page_no;
+        current_page--;
+        search_for_page_no(current_page);
+    }
+    $scope.load_article=function(article)
+    {
+
+        var image_file=$scope.path_name+article["jpeg"];
+        var pdf_file=$scope.path_name+article["pdf"];
+        var myWindow = window.open('','', 'width=500,height=500,scrollbars=1');
+        var html='<script src="jquery-1.6.2.min.js"></script><table width="100%" height="10%" border="0"><tr width="100%" height="100%"><td width="33%"><button width="200px" onclick="load('+"'text'"+')" >text</button></td><td width="33%"><button onclick="load('+"'img'"+')" width="100%" >image</button></td><td width="33%"><button onclick="load('+"'pdf'"+')" width="100%" >pdf</button></td></tr></table><div id="article_container" width="100%" height="90%"></div>';
+        myWindow.document.write(html);
+        var script='<script type="text/javascript">';
+        script+='function load(a){$("#article_container").empty();';
+        script+='if(a=="text"){$("#article_container").append("'+article["article_txt"]+'")}';
+        script+='else if(a=="img"){$("#article_container").append('+"'"+'<img src="'+image_file+'" width="400px">'+"'"+');}';
+        script+='else{$("#article_container").append('+"'"+'<embed src="'+pdf_file+'" width="100%" height="100%">'+"'"+');}';
+        script+="}load('img')</script>";
+        myWindow.document.write(script);
+
+        //myWindow.document.write('<div id="download_pdf" width="100%" height="30px"><a href= "'+pdf_file+'" >Download as PDF</a></div>');
+        //myWindow.document.write("<p><img src="+image_file+" width='400' /></p>");
+        //myWindow.document.write('<embed src="'+pdf_file+'" width="100%" height="100%">');
+        myWindow.document.close();
+        myWindow.focus();
+        //myWindow.close();
+
     }
 
     $scope.edition_change=function(){

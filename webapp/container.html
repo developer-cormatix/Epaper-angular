@@ -1,0 +1,7 @@
+<script src="jquery-1.6.2.min.js"></script><table width="100%" height="10%" border="0"><tr width="100%" height="100%"><td width="33%"><button width="200px" onclick="load('text')" >text</button></td><td width="33%"><button onclick="load('img')" width="100%" >image</button></td><td width="33%"><button onclick="load('pdf')" width="100%" >pdf</button></td></tr></table><div id="article_container" width="100%" height="90%"></div>
+<script type="text/javascript">
+function load(a)
+{
+	var out;$("#article_container").empty();if(a=="text"){out=article["text"];}else if(a=="img"){out='<img src="'+image_file+'" width=400px">');}else{out='<embed src="'+pdf_file+'" width="100%" height="100%">'}$("#article_container").append(out);
+}
+</script>
