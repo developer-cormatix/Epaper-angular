@@ -4,6 +4,7 @@
 		<title>E-paper</title>
 		<script type="text/javascript">page_no = {{PageNo}};
                logged_in={{logged_as}};
+
         </script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
         <script type="text/javascript">connected = {{alreadyLogged}};</script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
         <script src="jquery-1.6.2.min.js"></script>
@@ -148,9 +149,9 @@
                             <td>
 
                                 <a href="" ng-click="google_login()"><img src="images/sign-google.png" class="google_login" ></img></a>
-                                <br><br>
+                                <br> <br>
                                 <a href="" onclick="fb_login()"><img src="images/fblogin.jpeg" class="facebook_login" ></img></a>
-                                <br><br>
+                                <br> <br>
                             </td>
                             <td>
                             <form ng-submit="action()" class="login-form" name="actionForm" role="form">

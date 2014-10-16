@@ -77,8 +77,8 @@ exports.createRoutes = function(app,database) {
         console.log(JSON.parse(date_contents));
         var x=JSON.parse(date_contents)
         res.send(x["section"]);
-        console.log("seciton contens");
-        console.log(x["section"]);
+        //console.log("seciton contens");
+        //console.log(x["section"]);
         console.log("[info] Successfully loaded json file : "+file_name);
 
     });

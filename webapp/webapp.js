@@ -25,14 +25,6 @@ function epaperCtrl($scope,$resource,$location)
     $scope.path_name;//the path name for finding files
     $scope.page_image;
     $scope.current_page;
-    var getKeys = function(obj){
-        alert('funciton');
-        var keys = [];
-        for(var key in obj){
-           alert(key);
-        }
-        return keys;
-    }
     $scope.text="connecting";
 
     //load dates for corresponding edition
@@ -48,7 +40,7 @@ function epaperCtrl($scope,$resource,$location)
             }
             $scope.dates = list_dates;
             $scope.mydate = $scope.dates[0];
-
+            get_date_json();//load the main page upon login
 
         }, function (error) {
             alert("Error ");
@@ -105,6 +97,7 @@ function epaperCtrl($scope,$resource,$location)
                 load_sections();
                 load_first_page();
                 $scope.download_text="Download PDF ";
+
 
             }, function(error) {
             // error handler
@@ -271,6 +264,12 @@ function epaperCtrl($scope,$resource,$location)
         myWindow.focus();
         //myWindow.close();
 
+        // load article id to db
+        $resource('/api/article').save({article_id: article["article_no"]}, function () {
+            alert("loadled");
+        });
+
+
     }
 
     $scope.edition_change=function(){
@@ -305,13 +304,23 @@ function epaperCtrl($scope,$resource,$location)
 
 
             }*/
-            $location.path("/");
+            //window.location="/";
+            //$location.path("/");
+
         });
 
+        window.location="/";
+
+
+    }
+    if(connected==false) {
+        alert("Please login to continue");
+        window.location="/";
     }
 }
 
 function loginCtrl($scope, $resource, $location,$window) {
+
 
     $scope.errorMsg =' ';
 	if (connected)
@@ -368,6 +377,7 @@ function loginCtrl($scope, $resource, $location,$window) {
     Info stored : NAme, email & password = password
      */
     $scope.google_login=function(){
+
         var myParams = {
             'clientid' :'1056095437568-mlf4257ad2agjqpf4f79ssfbv21iv2vk.apps.googleusercontent.com',
             'cookiepolicy' : 'single_host_origin',
@@ -375,7 +385,13 @@ function loginCtrl($scope, $resource, $location,$window) {
             'approvalprompt':'force',
             'scope' : 'email'
         };
-        gapi.auth.signIn(myParams);
+        //first_time_google=false;
+
+
+            gapi.auth.signIn(myParams);
+
+
+
     }
 
     var google_infos;
@@ -383,11 +399,13 @@ function loginCtrl($scope, $resource, $location,$window) {
 
         gapi.client.setApiKey('AIzaSyAZFMGH_WIKH8vKyS_DSgGX9K_2ZmvjFro');
         gapi.client.load('plus', 'v1').then(function () {
+
                 var request = gapi.client.plus.people.get({
                     'userId': 'me'
                 });
 
                 request.execute(function (resp) {
+
                     var email = '';
                     if (resp['emails']) {
                         for (i = 0; i < resp['emails'].length; i++) {
@@ -425,6 +443,7 @@ function loginCtrl($scope, $resource, $location,$window) {
     function glogin_success()
     {
         connected = true;
+        alert("login success");
         logged_in="google";
         $location.path("/epaper");
     }
@@ -437,7 +456,7 @@ function loginCtrl($scope, $resource, $location,$window) {
         }
         else
             $scope.errorMsg = "Can't connect to server";
-        console.log('Fail !');
+        console.log('Failed to login !');
     }
 
     /*

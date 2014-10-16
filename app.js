@@ -35,8 +35,8 @@ user.createRoutes(app, database);
 ** Feeds Routes (creation, login, logout)
 */
 
-var feeds = require(__dirname + '/feeds.js');
-feeds.createRoutes(app, database);
+var articles = require(__dirname + '/articles.js');
+articles.createRoutes(app, database);
 
 /*
 ** Static files for web application
@@ -45,12 +45,6 @@ feeds.createRoutes(app, database);
 var webapp = require(__dirname + '/webappServing.js');
 webapp.createRoutes(app, database);
 
-
-/*
-** Creating a virtual server for hosting files
-*/
-var file_hoster=require(__dirname+'/file_hoster.js');
-file_hoster.create_server();
 
 /*
 Connecting the db

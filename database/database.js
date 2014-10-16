@@ -15,4 +15,5 @@ exports.connect = function(callback) {
 };
 
 exports.user = require('./userDB.js');
-exports.feed = require('./feedDB.js');
+exports.article = require('./articleDB.js');
+
