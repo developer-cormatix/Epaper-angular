@@ -2,16 +2,22 @@
 <html ng-app="Freader">
 	<head>
 		<title>E-paper</title>
-		<script type="text/javascript">page_no = {{PageNo}};</script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
+		<script type="text/javascript">page_no = {{PageNo}};
+               logged_in={{logged_as}};
+        </script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
+        <script type="text/javascript">connected = {{alreadyLogged}};</script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
         <script src="jquery-1.6.2.min.js"></script>
 
         <script src="angular.min.js"></script>
 		<script src="angular-resource.min.js"></script>
 		<script src="webapp.js"></script>
         <link rel="stylesheet" type="text/css"  href="epaper-style.css">
+        <link href="css/signin.css" rel="stylesheet">
+        <script src="https://apis.google.com/js/client.js" ></script>
 
 
 		<meta charset="utf-8">
+
 	</head>
 	<body ng-view>
 
@@ -51,6 +57,8 @@
                                     <td width="56" align="center"><img src="images/zoom-in.jpg" width="22" height="22" /></td>
                                     <td width="41"><img src="images/zoom-out.jpg" width="22" height="21" /></td>
                                     <td ><button ng-click="load_page()" class="date_button">Go</button></td>
+                                    <td ><button ng-click="logout()" class="date_button" >SignOut</button></td>
+
                                 </tr>
                             </table></td>
                         </tr>
@@ -127,47 +135,127 @@
                     </table></td>
                 </tr>
             </table></td>
-
-
-
-
-
-
-
-<!--
-            <div class="container" id="epaper" ng-controller="epaperCtrl" >
-                <div class="edition-date-container" ng-init="initialize()">
-                    <div class="edition_container">
-                        Editions :<select class="list_edition1" ng-model="myedition" ng-options="edition for edition in editions" ng-change="edition_change()"></select>
-                    </div>
-                    <div class="date_container">
-                        Date :
-                        <select class="list_date" ng-model="mydate" ng-options="date for date in dates" ng-change="date_change()"></select>
-                    </div>
-                    <button ng-click="load_page()" class="date_button">Go</button>
-                </div>
-                {{text}}
-                <div class="outer_container" >
-                    <div class="thumbnail_section_holder">
-                        <div class="section_holder">
-                            <p class=""section-text">{{section_text}}</p>
-                            <select class="list_section" ng-model="mysection" ng-options="section for section in sections" ng-change="section_change()"></select>
-
-                        </div>
-                        <div class="thumbnail_holder">
-
-                            <div class=""thumbnails" ng-repeat="page in pages">
-                                <img class="thumbs" src="{{path_name+page.thumbnail}}" ng-click="load_orignal_page({{page.page_no}})"/>
-                                <p class="page_no">{{page.page_no}}</p></br>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="page_holder">
-                    </div>
-                </div>
-            </div>-->
             </body>
         </script>
+
+
+        <script type="text/ng-template" id="loginView">
+
+                <div class="container login-screen" id="loginView" ng-controller="loginCtrl">
+                    <CENTER><h2 class="" >Welcome to Epaper</h2></div></CENTER>
+                    <table class="signin_container" border="1" align="centre">
+                        <tr>
+                            <td>
+
+                                <a href="" ng-click="google_login()"><img src="images/sign-google.png" class="google_login" ></img></a>
+                                <br><br>
+                                <a href="" onclick="fb_login()"><img src="images/fblogin.jpeg" class="facebook_login" ></img></a>
+                                <br><br>
+                            </td>
+                            <td>
+                            <form ng-submit="action()" class="login-form" name="actionForm" role="form">
+
+                                <p class="errorMsg">{{errorMsg}}</p>
+                                <div class="control-group">
+                            <input type="email" class="form-control" id="login-name" placeholder="Email" ng-model="email" required autofocus>
+                            <br>
+                            <label class="login-field-icon fui-user" for="login-name"></label>
+                            <br>
+                            <input type="password" class="form-control" id="login-pass" placeholder="Password" ng-model="password" required>
+                            <label class="login-field-icon fui-lock" for="login-pass"></label>
+                        </div>
+                        <br>
+                        <a ng-click="changeAction()" class="actionChange" href=""> {{text.changeAction}}</a><br>
+                        <br>
+                        <div align="center">
+                            <button style="width: 200px;height: 50px;justify: center"   value="{{text.action}}" ng-disabled="actionForm.$invalid" class="btn btn-lg btn-primary btn-block">Sign in</button>
+                        </div>
+
+                            </form>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+
+        </script>
+
+
+   <!--    <script type="text/ng-template" id="GoogleLogin">
+            <input type="button"  value="Login" onclick="login()" />
+            <input type="button"  value="Logout" onclick="logout()" />
+
+            <div id="profile"></div>
+            <script type="text/javascript">
+
+                function logout()
+                {
+                    gapi.auth.signOut();
+                    location.reload();
+                }
+                function login()
+                {
+                    var myParams = {
+                        'clientid' : '212418486312-565c3b0rbhgd6nphfdlsnkotiiplapo4.apps.googleusercontent.com',
+                        'cookiepolicy' : 'none',
+                        'callback' : 'loginCallback',
+                        'approvalprompt':'force',
+                        'scope' : 'email'
+                    };
+                    gapi.auth.signIn(myParams);
+                }
+
+                function loginCallback1(result)
+                {
+                    alert("logincallbakc");
+                    if(result['status']['signed_in'])
+                    {
+                        var request = gapi.client.plus.people.get(
+                                {
+                                    'userId': 'me'
+                                });
+                        request.execute(function (resp)
+                        {
+                            var email = '';
+                            if(resp['emails'])
+                            {
+                                for(i = 0; i < resp['emails'].length; i++)
+                                {
+                                    if(resp['emails'][i]['type'] == 'account')
+                                    {
+                                        email = resp['emails'][i]['value'];
+                                    }
+                                }
+                            }
+
+                            var str = "Name:" + resp['displayName'] + "<br>";
+                            str += "Image:" + resp['image']['url'] + "<br>";
+                            str += "<img src='" + resp['image']['url'] + "' ></img><br>";
+                            str += "URL:" + resp['url'] + "<br>";
+                            str += "Email:" + email + "<br>";
+                            document.getElementById("profile").innerHTML = str;
+                        });
+
+                    }
+
+                }
+                function onLoadCallback()
+                {
+                    gapi.client.setApiKey('AIzaSyB3MrJh2YHzBThZL1-VPUo-lfS-b3W4sCo');
+                    gapi.client.load('plus', 'v1',function(){});
+                }
+
+                 </script>
+
+        <script type="text/javascript">
+            (function() {
+                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                po.src = 'https://apis.google.com/js/client.js?onload=onLoadCallback';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+            })();
+        </script>
+        </script>-->
 
 
 		

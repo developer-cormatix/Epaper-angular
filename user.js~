@@ -1,6 +1,13 @@
 var config = require(__dirname + '/config.js');
 
 exports.createRoutes = function (app, database) {
+	/*
+		my mehtods
+	*/
+    app.get("/api/today",function(req,res){
+       console.log("today !");
+    });
+
 
 	/*
 	** User creation
@@ -16,13 +23,12 @@ exports.createRoutes = function (app, database) {
 
 		var email = req.param('email');
 		var password = req.param('password');
-        var name=req.param('name');
 		if (!email || !password || email.length < 3 || password.length < 3 || !email.match(config.emailRegex))
 		{
 			res.send(400, "Please provide a correct email and a correct password");
 			return false;
 		}
-		database.user.create(email, password,name, function (user, err) {
+		database.user.create(email, password, function (user, err) {
 			if (err)
 			{
 				console.log("[error] user %s already exist", email);
@@ -75,7 +81,7 @@ exports.createRoutes = function (app, database) {
 			if (!user)
 			{
 				console.log("[error] connection error for user %s", email);
-				res.send(401, "Wrong email or password ");
+				res.send(401, "Wrong email or password");
 				return false;
 			}
 			req.session.user = user;

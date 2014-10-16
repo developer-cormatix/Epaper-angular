@@ -21,7 +21,7 @@ app.use(app.router);
  */
 
 var epaper=require(__dirname+'/epaper_data.js');
-epaper.createRoutes(app);
+epaper.createRoutes(app,database);
 
 
 /*
@@ -51,6 +51,14 @@ webapp.createRoutes(app, database);
 */
 var file_hoster=require(__dirname+'/file_hoster.js');
 file_hoster.create_server();
+
+/*
+Connecting the db
+ */
+database.connect(function () {
+    console.log("Server started and listening on port " + config.port);
+});
+
 
 app.listen(config.port);
 console.log("app started at : http://localhost:"+config.port);

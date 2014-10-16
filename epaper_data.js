@@ -7,7 +7,7 @@ var config = require(__dirname + '/config.js');
 var edition_content;
 var date_contents;
 
-exports.createRoutes = function(app) {
+exports.createRoutes = function(app,database) {
     app.get('/api/get_edition', function (req, res) {
         try{
             edition_content=fs.readFileSync(config.json_path+"/"+config.main_json_name);

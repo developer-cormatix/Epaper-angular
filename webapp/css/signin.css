@@ -1,0 +1,69 @@
+body { 
+  overflow-y: scroll;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+
+.login-form {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+  background-color:#e1e1e1;
+  border-radius: 6px;
+  box-shadow: 3px 3px 2px 2px #a6a6a6;
+}
+
+.form-signin-heading{
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin-bottom: 10px;
+}
+
+.login-form .checkbox {
+  margin-bottom: 10px;
+}
+.login-form.form-signin .checkbox {
+  margin-left: 25px;
+}
+.login-form .checkbox {
+  font-weight: normal;
+}
+#login-name,#login-pass {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 20px;
+  font-size: 16px;
+}
+.login-form .form-control:focus {
+  z-index: 2;
+}
+.form-control input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-control input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.signin_container{
+    align: center;
+    margin-left: 300px;
+}
+
+
+.google_login,.facebook_login {
+    width: 230px;
+    height : 50px;
+    padding: 15px;
+    margin: 0 auto;
+    background-color:#e1e1e1;
+    border-radius: 6px;
+    box-shadow: 3px 3px 2px 2px #a6a6a6;
+}

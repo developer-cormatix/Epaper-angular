@@ -7,8 +7,8 @@ angular.module('backend', ['ngResource']).
 angular.module('Freader', ['backend'])
 	.config(function ($routeProvider) {
 		$routeProvider.
-			when("/", {controller: epaperCtrl, template: document.getElementById('epaper').text}).
-			
+			when("/epaper", {controller: epaperCtrl, template: document.getElementById('epaper').text}).
+            when("/", {controller: loginCtrl, template: document.getElementById('loginView').text}).
 			otherwise({redirectTo:'/'});
 	});
 
@@ -282,11 +282,40 @@ function epaperCtrl($scope,$resource,$location)
         //alert("date changed");
         //alert("new date:"+$scope.mydate);
     }
+
+    $scope.logout=function()
+    {
+        $resource('/api/login').delete({}, function () {
+            connected = false;
+           /* if(logged_in=="google")
+            {
+                new Image().src = "https://accounts.google.com/logout";
+
+            }
+            else if(logged_in="facebook")
+            {
+                alert("facebook");
+                alert(FB);
+                var x=Object.keys(FB);
+
+                FB.logout(function(resp)
+                {
+                    alert("logged out");
+                });
+
+
+            }*/
+            $location.path("/");
+        });
+
+    }
 }
 
-function loginCtrl($scope, $resource, $location) {
+function loginCtrl($scope, $resource, $location,$window) {
+
+    $scope.errorMsg =' ';
 	if (connected)
-		return $location.path("/feeds");
+		return $location.path("/epaper");
 
 	var action = "login";
 	var loginText = {
@@ -309,17 +338,19 @@ function loginCtrl($scope, $resource, $location) {
 		delete $scope.errorMsg;
 		var infos = {
 			email: $scope.email,
-			password: $scope.password
+			password: $scope.password,
+            name:''
 		}
 		if (action == "login")
-			$resource('/api/today').get(infos, actionSuccess, actionFail);
+			$resource('/api/login').get(infos, actionSuccess, actionFail);
 		else
 			$resource('/api/user').save(infos, actionSuccess, actionFail);
 	}
 
 	actionSuccess = function() {
+        logged_in="email";
 		connected = true;
-		$location.path("/feeds");
+		$location.path("/epaper");
 	}
 	actionFail = function (response) {
 		if (action == "login" && response.status == 401)
@@ -330,6 +361,181 @@ function loginCtrl($scope, $resource, $location) {
 			$scope.errorMsg = "Can't connect to server";
 		console.log('Fail !');
 	}
+
+
+    /*
+    google login begins
+    Info stored : NAme, email & password = password
+     */
+    $scope.google_login=function(){
+        var myParams = {
+            'clientid' :'1056095437568-mlf4257ad2agjqpf4f79ssfbv21iv2vk.apps.googleusercontent.com',
+            'cookiepolicy' : 'single_host_origin',
+            'callback' : 'loginCallback',
+            'approvalprompt':'force',
+            'scope' : 'email'
+        };
+        gapi.auth.signIn(myParams);
+    }
+
+    var google_infos;
+    $window.loginCallback= function(result) {
+
+        gapi.client.setApiKey('AIzaSyAZFMGH_WIKH8vKyS_DSgGX9K_2ZmvjFro');
+        gapi.client.load('plus', 'v1').then(function () {
+                var request = gapi.client.plus.people.get({
+                    'userId': 'me'
+                });
+
+                request.execute(function (resp) {
+                    var email = '';
+                    if (resp['emails']) {
+                        for (i = 0; i < resp['emails'].length; i++) {
+
+                            if (resp['emails'][i]['type'] == 'account') {
+                                email = resp['emails'][i]['value'];
+
+                                break;
+                            }
+                        }
+                        var name=resp['displayName'];
+
+                        if(name=='')
+                        {
+                            name="none";
+                        }
+
+                        google_infos = {
+                            email:email,
+                            password: 'password',
+                            name:name
+                        }
+                        $resource('/api/user').save(google_infos, glogin_success, glogin_fail);
+                    }
+                    else
+                    {
+                        alert("The email is not Authenticated . Please try again ")
+                    }
+                });
+            },
+            function (reason) {
+                console.log('Error: ' + reason.result.error.message);
+            });
+    }
+    function glogin_success()
+    {
+        connected = true;
+        logged_in="google";
+        $location.path("/epaper");
+    }
+    glogin_fail = function (response) {
+        if (response.status == 401)
+            $scope.errorMsg = "Wrong email or password";
+        else if (response.status == 409) {
+            //$scope.errorMsg = "Email already registered";
+            $resource('/api/login').get(google_infos, glogin_success, glogin_fail);
+        }
+        else
+            $scope.errorMsg = "Can't connect to server";
+        console.log('Fail !');
+    }
+
+    /*
+    Google login ends here
+     */
+
+
+    /*
+    fb login begins
+
+     */
+
+
+    var fb_infos;
+
+    $window.fb_login =function(){
+        FB.login(function(response) {
+            if (response.status === 'connected') {
+                if (response.authResponse) {
+                    FB.api('/me', function(response) {
+                        user_email = response.email; //get user email
+                        var name=response.name;
+                        if(!user_email)
+                        {
+                            alert("The email is not Authenticated . Please try again ");
+                        }
+                        else
+                        {
+                            fb_infos = {
+                                email:user_email,
+                                password: 'password',
+                                name:name
+                            };
+                            $resource('/api/user').save(fb_infos, fblogin_success, fblogin_fail);
+                        }
+                    });
+
+                } else {
+                    //user hit cancel button
+                    console.log('User cancelled login or did not fully authorize.');
+
+                }
+            }
+            else
+            {
+                FB.login();
+            }
+        }, {
+            scope: 'publish_stream,email'
+        });
+    }
+
+    function fblogin_success()
+    {
+        alert("login success");
+        connected = true;
+        logged_in="facebook";
+        $location.path("/epaper");
+    }
+    fblogin_fail = function (response) {
+
+
+        if (response.status == 401) {
+            $scope.errorMsg = "Wrong email or password";
+            alert('   $scope.errorMsg = "Wrong email or password";')
+        }
+        else if (response.status == 409) {
+            $resource('/api/login').get(fb_infos, fblogin_success,fblogin_fail);
+        }
+        else
+            alert('$scope.errorMsg = "Cant connect to server";');
+
+    }
+
+
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '570258479768451',
+            cookie     : true,  // enable cookies to allow the server to access
+            // the session
+            channelUrl : 'http://localhost:3000/', // Channel File
+            xfbml      : true,  // parse social plugins on this page
+            version    : 'v2.1' // use version 2.1
+        });
+
+    };
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    /*
+    fb login ends
+     */
 }
 /*
 function feedsCtrl($scope, $resource, $location) {
