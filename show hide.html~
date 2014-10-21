@@ -1,0 +1,57 @@
+<html>
+<body>
+<script src="webapp/jquery-1.6.2.min.js"></script>
+<div class="search-container" id="search_container" visibilty="hidden">
+<form ng-submit="action()" class="login-form" name="actionSearch" role="form">
+ <input type="text" style="width:190px" class="form-control" id="login-pass" placeholder="Search current day" ng-model="password" required>
+<button style="width: 60px;height: 30px;justify: center" ng-disabled="actionSearch.$invalid" class="search-button">Search</button>
+</form>
+</div>
+<div id="wizard" class="swMain">
+    <ul>
+      <li><a href="#step-1">
+            <label class="stepNumber">1</label>
+        </a></li>
+      <li><a href="#step-2">
+            <label class="stepNumber">2</label>
+        </a></li>
+      <li><a href="#step-3">
+            <label class="stepNumber">3</label>
+         </a></li>
+      <li><a href="#step-4">
+            <label class="stepNumber">4</label>
+        </a></li>
+    </ul>
+    <div id="btn"> 
+        <h2 class="StepTitle">Perfil</h2>
+        <table cellspacingPerfil="3" cellpadding="3" align="center">
+            <tr>
+                  <td align="center" colspan="3">&nbsp;</td>
+            </tr>        
+            <tr>
+                  <td align="right">Username :</td>
+                  <td align="left">
+                    <input type="text" id="username" name="username" value="" class="txtBox">
+                  </td>
+                  <td align="left"><span id="msg_username"></span>&nbsp;</td>
+            </tr>
+            <tr>
+                  <td align="right">Password :</td>
+                  <td align="left">
+                    <input type="password" id="password" name="password" value="" class="txtBox">
+                  </td>
+                  <td align="left"><span id="msg_password"></span>&nbsp;</td>
+            </tr>                                          
+       </table>               
+    </div>
+</body>
+<script type="text/javascript">
+$(".search-container").hide();
+$('#btn').click(function() {
+    $('.search-container').toggler();
+});
+$('#btn').mouseout(function() {
+    $('.search-container').hide();
+});
+</script>
+</html>

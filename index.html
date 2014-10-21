@@ -2,12 +2,15 @@
 <html ng-app="Freader">
 	<head>
 		<title>E-paper</title>
-		<script type="text/javascript">page_no = {{PageNo}};
+        <script src="jquery-1.6.2.min.js"></script>
+
+        <script type="text/javascript">page_no = {{PageNo}};
                logged_in={{logged_as}};
 
+
         </script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
+
         <script type="text/javascript">connected = {{alreadyLogged}};</script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
-        <script src="jquery-1.6.2.min.js"></script>
 
         <script src="angular.min.js"></script>
 		<script src="angular-resource.min.js"></script>
@@ -15,16 +18,18 @@
         <link rel="stylesheet" type="text/css"  href="epaper-style.css">
         <link href="css/signin.css" rel="stylesheet">
         <script src="https://apis.google.com/js/client.js" ></script>
-
-
 		<meta charset="utf-8">
-
 	</head>
 	<body ng-view>
-
         <script type="text/ng-template" id="epaper">
             <body ng-controller="epaperCtrl">
             <table width="1230" border="0" align="center" cellpadding="0" cellspacing="0" ng-init="initialize()"  >
+                <tr>
+                    <td>
+                        <h1 class="main_heading">The E-Paper</h1>
+
+                    </td>
+                </tr>
                 <tr>
                     <td height="28" align="left" class="sub-nav"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
@@ -45,6 +50,13 @@
                                 </tr>
                             </table></td>
                             <td width="2"><img src="images/divider.jpg" width="2" height="28" /></td>
+                            <td width="200"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="25"><a href="" ng-click="show_search_container()"><img src="images/search.jpg" width="25" height="23" border="0"  /></a></td>
+                                </tr>
+                            </table></td>
+
+                            <td width="2"><img src="images/divider.jpg" width="2" height="28" /></td>
                             <td width="225"><table border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td width="32"><img src="images/archive.jpg" width="22" height="22" hspace="5" /></td>
@@ -55,9 +67,8 @@
                             <td width="2"><img src="images/divider.jpg" width="2" height="28" /></td>
                             <td width="251"><table width="100" border="0" cellspacing="1" cellpadding="0">
                                 <tr>
-                                    <td width="56" align="center"><img src="images/zoom-in.jpg" width="22" height="22" /></td>
-                                    <td width="41"><img src="images/zoom-out.jpg" width="22" height="21" /></td>
                                     <td ><button ng-click="load_page()" class="date_button">Go</button></td>
+
                                     <td ><button ng-click="logout()" class="date_button" >SignOut</button></td>
 
                                 </tr>
@@ -108,13 +119,40 @@
                                 </tr>
                             </table></td>
                             <td align="center" valign="top" >
+
+
+
                                 <div id="loadImg" style="position: relative">
+
                                     <img src="{{page_image}}"  class="mainimage-border" style="position: absolute;left: 0px;top: 0px"  >
                                     <div class="zoning" ng-repeat="article in current_page.articles">
                                         <div class="boundaries" ng-repeat="coord in article.coords" >
-                                            <div id="{{article.article_no}}" class="zones" style="left:{{coord[0]}}px;top:{{coord[1]}}px; height: {{coord[2]}}px; width: {{coord[3]}}px;position:absolute;" ng-click="load_article(article)" onmouseover="this.style.border= '5px solid red';" onmouseout="this.style.border= 'none';"></div>
+                                            <div id="zones" class="{{article.article_no}}" style="left:{{coord[0]}}px;top:{{coord[1]}}px; height: {{coord[2]}}px; width: {{coord[3]}}px;position:absolute;" ng-click="load_article(article)" onmouseover='highlight(this.className)' onmouseout="unhighlight(this.className)"></div>
                                         </div>
                                     </div>
+
+
+                                    <!-- search implementations-->
+                                    <div style="position: relative" class="search-container" id="search_container" >
+                                        <form ng-submit="search()" class="search_form" name="actionSearch" role="form">
+                                            <input type="text" style="width:150px;height:30px" class="form-control" id="search_key" placeholder="Search current day" ng-model="search_key" required>
+                                            <button style="width: 60px;height: 30px;justify: center" ng-disabled="actionSearch.$invalid" class="search-button">Search</button>
+                                        </form>
+                                    </div>
+                                    <div style="position: relative;" class="search-result-container" id="search_result_container" >
+                                        <div class="close_search_results_button">
+                                            <a href ="" onclick="close_search_results()"><img src="images/close.jpg"></img></a>
+                                        </div>
+                                        <h3>Search results :</h3>
+                                        <br>
+                                        <h4>Search found {{search_articles.length}} results</h4>
+                                        <ul class="search_results_displayer" ng-repeat="search_article in search_articles">
+                                            <li id="{{search_article.article_no}}"  class="search_article_display">
+                                                <a href="" ng-click="load_article(search_article)">{{search_article.article_txt.substring(0,30)}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
 
                                 </div>
 
@@ -181,84 +219,6 @@
 
 
         </script>
-
-
-   <!--    <script type="text/ng-template" id="GoogleLogin">
-            <input type="button"  value="Login" onclick="login()" />
-            <input type="button"  value="Logout" onclick="logout()" />
-
-            <div id="profile"></div>
-            <script type="text/javascript">
-
-                function logout()
-                {
-                    gapi.auth.signOut();
-                    location.reload();
-                }
-                function login()
-                {
-                    var myParams = {
-                        'clientid' : '212418486312-565c3b0rbhgd6nphfdlsnkotiiplapo4.apps.googleusercontent.com',
-                        'cookiepolicy' : 'none',
-                        'callback' : 'loginCallback',
-                        'approvalprompt':'force',
-                        'scope' : 'email'
-                    };
-                    gapi.auth.signIn(myParams);
-                }
-
-                function loginCallback1(result)
-                {
-                    alert("logincallbakc");
-                    if(result['status']['signed_in'])
-                    {
-                        var request = gapi.client.plus.people.get(
-                                {
-                                    'userId': 'me'
-                                });
-                        request.execute(function (resp)
-                        {
-                            var email = '';
-                            if(resp['emails'])
-                            {
-                                for(i = 0; i < resp['emails'].length; i++)
-                                {
-                                    if(resp['emails'][i]['type'] == 'account')
-                                    {
-                                        email = resp['emails'][i]['value'];
-                                    }
-                                }
-                            }
-
-                            var str = "Name:" + resp['displayName'] + "<br>";
-                            str += "Image:" + resp['image']['url'] + "<br>";
-                            str += "<img src='" + resp['image']['url'] + "' ></img><br>";
-                            str += "URL:" + resp['url'] + "<br>";
-                            str += "Email:" + email + "<br>";
-                            document.getElementById("profile").innerHTML = str;
-                        });
-
-                    }
-
-                }
-                function onLoadCallback()
-                {
-                    gapi.client.setApiKey('AIzaSyB3MrJh2YHzBThZL1-VPUo-lfS-b3W4sCo');
-                    gapi.client.load('plus', 'v1',function(){});
-                }
-
-                 </script>
-
-        <script type="text/javascript">
-            (function() {
-                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-                po.src = 'https://apis.google.com/js/client.js?onload=onLoadCallback';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-            })();
-        </script>
-        </script>-->
-
-
 		
 
 	</body>

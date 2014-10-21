@@ -74,7 +74,7 @@ exports.createRoutes = function(app,database) {
             console.log("[error] Error in reading "+file_name);
             return false;
         }
-        console.log(JSON.parse(date_contents));
+        //console.log(JSON.parse(date_contents));
         var x=JSON.parse(date_contents)
         res.send(x["section"]);
         //console.log("seciton contens");

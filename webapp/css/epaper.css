@@ -60,3 +60,13 @@ body,html{
     width:80%;
     height:150px;
 }
+
+
+.search_form{
+    max-width: 230px;
+    padding: 15px;
+    margin: 0 auto;
+    background-color:#e1e1e1;
+    border-radius: 6px;
+    box-shadow: 3px 3px 2px 2px #a6a6a6;
+}

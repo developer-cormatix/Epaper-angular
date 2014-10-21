@@ -20,7 +20,7 @@
       		},
       		{
         	"article_no" : "1.2",
-        	"article_txt" : "Some Text",
+        	"article_txt" : "Some Text hello",
         	"jpeg" : "30092014_1p_2a.jpeg",
         	"pdf" : "30092014_1p_2a.pdf",
 		"coords":[[43,206,592,180]],
@@ -122,7 +122,7 @@
         	"article_txt" : "Some Text",
         	"jpeg" : "30092014_1p_1a.jpeg",
         	"pdf" : "30092014_1p_1a.pdf",
-		"coords":[[46,70,115,176]],
+		"coords":[],
 		"link" : "3.1"
       		},
       		{

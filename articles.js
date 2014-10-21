@@ -5,6 +5,7 @@ var config = require('./config.js');
 
 exports.createRoutes = function(app, database) {
     app.post('/api/article', function (req, res) {
+        //console.log(req.connection.remoteAddress);
         if (!req.session.user)
             return res.send(401, "Loging required");
         var article_id_value = req.param('article_id');

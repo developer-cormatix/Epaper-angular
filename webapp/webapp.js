@@ -12,11 +12,12 @@ angular.module('Freader', ['backend'])
 			otherwise({redirectTo:'/'});
 	});
 
-function epaperCtrl($scope,$resource,$location)
+function epaperCtrl($scope,$resource,$location,$window)
 {
+    
     $scope.text="sndkjnsfdfjs";
     var list_editions;
-    var list_dates=["30092014","29092014"];
+    var list_dates=["30092014","28092014"];
     var edition_json;
     var date_json;
     $scope.dates=list_dates;
@@ -230,6 +231,24 @@ function epaperCtrl($scope,$resource,$location)
         //alert(current_page);
         current_page++;
         search_for_page_no(current_page);
+       // $(".mainimage-border").css('width','none');
+    }
+
+    $window.highlight=function(a)
+    {
+        var elements=document.getElementsByClassName(a);//.style.background = "Black";
+        for(var i=0;i<elements.length;i++)
+        {
+            elements[i].style.border="2px solid blue";
+        }
+    }
+    $window.unhighlight=function(a)
+    {
+        var elements=document.getElementsByClassName(a);//.style.background = "Black";
+        for(var i=0;i<elements.length;i++)
+        {
+            elements[i].style.border="none";
+        }
     }
 
     $scope.prev_page=function()
@@ -317,12 +336,89 @@ function epaperCtrl($scope,$resource,$location)
         alert("Please login to continue");
         window.location="/";
     }
+
+
+    function list_keys(a)
+    {
+        var x=Object.keys(a);
+        for (var y in x)
+        {
+            alert(x[y]);
+        }
+    }
+    //hide the search container initially
+    $('.search-container').hide();
+    $('.search-result-container').hide();
+
+    $scope.show_search_container=function()
+    {
+        //$('.search-result-container').hide();
+        $('.search-container').toggle();
+        $('.search-result-container').hide();
+
+    }
+
+    $scope.search=function()
+    {
+        var key=$scope.search_key;
+
+        //hide the search element after
+
+        $('.search-container').hide();
+        $('.search-result-container').show();
+
+        $scope.search_articles=json_search(key);
+
+    }
+    json_search=function(search)
+    {
+        /*
+        Search method for searching in current date &  current edition
+         */
+
+        //var search="sdfsdfs img";
+        var result=[];
+        var search_keys=search.split(/\s+/);
+        //get sections
+        for (var i=0;i<$scope.pages.length;i++)
+        {
+            //got the page
+            var current_page=$scope.pages[i];
+            //list_keys(current_page);
+            for(var j=0;j<current_page.articles.length;j++)
+            {
+                //got the article
+                var current_article=current_page.articles[j];
+                //list_keys(current_article);
+                //alert(current_article.article_txt);
+                for(var k=0;k<search_keys.length;k++)
+                {
+                    //alert(search_keys[k]);
+                    //alert(current_article.article_txt.toLowerCase().search(search_keys[k]));
+                    if(current_article.article_txt.toLowerCase().search(search_keys[k])>=0)
+                    {
+                       // alert("key found "+search_keys[k]);
+
+                        if(result.indexOf(current_article)==-1) {
+                            result.push(current_article);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+
+    }
+    close_search_results=function(){
+        $('.search-result-container').hide();
+    }
+
 }
 
 function loginCtrl($scope, $resource, $location,$window) {
 
 
-    $scope.errorMsg =' ';
+
 	if (connected)
 		return $location.path("/epaper");
 
@@ -349,26 +445,39 @@ function loginCtrl($scope, $resource, $location,$window) {
 			email: $scope.email,
 			password: $scope.password,
             name:''
-		}
+		};
 		if (action == "login")
 			$resource('/api/login').get(infos, actionSuccess, actionFail);
 		else
 			$resource('/api/user').save(infos, actionSuccess, actionFail);
-	}
-
-	actionSuccess = function() {
+	};
+    actionSuccess = function() {
         logged_in="email";
 		connected = true;
 		$location.path("/epaper");
-	}
-	actionFail = function (response) {
-		if (action == "login" && response.status == 401)
-			$scope.errorMsg = "Wrong email or password";
-		else if (action == "register" && response.status == 409)
+	};
+    load_error_msg=function(a)
+    {
+        alert("loade rror ms");
+        $scope.errorMsg=a;
+    };
+	actionFail = function(response) {
+        var a;
+		if (response.status==401) {
+            $scope.errorMsg = "Wrong email or password";
+            a="Wrong email or password";
+        }
+		else if (response.status==409){
 			$scope.errorMsg = "Email already registered";
-		else
+            a="Email already registered";
+        }
+		else{
 			$scope.errorMsg = "Can't connect to server";
-		console.log('Fail !');
+            a="Can't connect to server";
+        }
+        alert(a);
+        //load_error_msg(a);
+
 	}
 
 
@@ -451,7 +560,6 @@ function loginCtrl($scope, $resource, $location,$window) {
         if (response.status == 401)
             $scope.errorMsg = "Wrong email or password";
         else if (response.status == 409) {
-            //$scope.errorMsg = "Email already registered";
             $resource('/api/login').get(google_infos, glogin_success, glogin_fail);
         }
         else
@@ -521,13 +629,15 @@ function loginCtrl($scope, $resource, $location,$window) {
 
         if (response.status == 401) {
             $scope.errorMsg = "Wrong email or password";
-            alert('   $scope.errorMsg = "Wrong email or password";')
+
         }
         else if (response.status == 409) {
             $resource('/api/login').get(fb_infos, fblogin_success,fblogin_fail);
         }
         else
-            alert('$scope.errorMsg = "Cant connect to server";');
+        {
+            $scope.errorMsg="cannot connect to server";
+        }
 
     }
 
