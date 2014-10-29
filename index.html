@@ -6,8 +6,6 @@
 
         <script type="text/javascript">page_no = {{PageNo}};
                logged_in={{logged_as}};
-
-
         </script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
 
         <script type="text/javascript">connected = {{alreadyLogged}};</script> <!-- Actual connection state directly in the head, so we don't have to get it with an AJAX request -->
@@ -133,12 +131,36 @@
 
 
                                     <!-- search implementations-->
+
+                                    <!-- basic search -->
                                     <div style="position: relative" class="search-container" id="search_container" >
                                         <form ng-submit="search()" class="search_form" name="actionSearch" role="form">
                                             <input type="text" style="width:150px;height:30px" class="form-control" id="search_key" placeholder="Search current day" ng-model="search_key" required>
                                             <button style="width: 60px;height: 30px;justify: center" ng-disabled="actionSearch.$invalid" class="search-button">Search</button>
                                         </form>
+                                        <button style="height: 30px;margin-top:10px" class="advanced-search-button" onclick="advanced_search_enable()">Advanced Search</button>
                                     </div>
+
+                                    <!-- Advacned search implementations -->
+                                    <div style="position: relative" class="advanced-search-container" id="advanced-search-container">
+                                        <form ng-submit="advanced_search()" class="advanced_search_form" id="advanced_search_form" name="actionAdvancedSearch" role="form">
+                                            Keyword : <input type="text" style="width:150px;height:30px" class="form-control" id="advanced_search_key" placeholder="Enter keyword" ng-model="advanced_search_key" required>
+                                            <br><br>
+                                            Edition  :
+                                            <select name="advaned_search_edition" id="advanced_search_edition" ng-model="advanced_search_edition" ng-options="edition for edition in search_editions" ng-change="advanced_search_edition_change()">
+                                            </select>
+                                            <br><br>
+                                            Date :
+                                            <select name="advaned_search_date" id="advanced_search_date" ng-model="advanced_search_date" ng-options="date for date in search_dates" >
+                                            </select>
+
+                                            <br><br>
+                                            <button style="width: 120px;height: 30px"  ng-disabled="actionAdvancedSearch.$invalid" class="search-button">Search</button>
+                                            <input style="width: 120px;height: 30px"  type="button" onclick="reset_advanced_search()" value="Reset form">
+                                        </form>
+                                    </div>
+
+
                                     <div style="position: relative;" class="search-result-container" id="search_result_container" >
                                         <div class="close_search_results_button">
                                             <a href ="" onclick="close_search_results()"><img src="images/close.jpg"></img></a>

@@ -349,13 +349,62 @@ function epaperCtrl($scope,$resource,$location,$window)
     //hide the search container initially
     $('.search-container').hide();
     $('.search-result-container').hide();
+    $('.advanced-search-container').hide();
 
     $scope.show_search_container=function()
     {
         //$('.search-result-container').hide();
+        $('.advanced-search-container').hide();
         $('.search-container').toggle();
         $('.search-result-container').hide();
+        $('.advanced-search-container').hide();
+    };
 
+    function get_dates_for_edition(edition_name)
+    {
+        var load_dates_resource = $resource('/api/edition_dates');
+        load_dates_resource.query({edition:edition_name}, function (data) {
+            // success handler
+            edition_json=data;
+            list_dates = [];
+            list_dates.push("All");
+            for (var x in data) {
+                list_dates.push(data[x]['date']);
+            }
+            $scope.search_dates=list_dates;
+            $scope.advanced_search_date=$scope.search_dates[0];
+        }, function (error) {
+            alert("Error ");
+            alert(error);
+            // error handler
+        });
+    }
+
+    $scope.advanced_search_edition_change=function()
+    {
+        if($scope.advanced_search_edition=="All")
+            get_dates_for_edition($scope.search_editions[0]);
+        else
+            get_dates_for_edition($scope.advanced_search_edition);
+    }
+    $window.advanced_search_enable=function()
+    {
+        $('.advanced-search-container').toggle();
+        $('.search-container').hide();
+        var search_editions=$scope.editions;
+        search_editions.push("All");
+        $scope.search_editions=search_editions;
+
+        $scope.advanced_search_edition=$scope.search_editions[$scope.search_editions.length-1];
+        get_dates_for_edition($scope.search_editions[0]);
+
+    }
+
+    $window.reset_advanced_search=function()
+    {
+        $scope.advanced_search_edition=$scope.search_editions[$scope.search_editions.length-1];
+        $scope.advanced_search_date=$scope.search_dates[0];
+        $(".advanced_search_form")[0].reset();
     }
 
     $scope.search=function()
@@ -369,7 +418,8 @@ function epaperCtrl($scope,$resource,$location,$window)
 
         $scope.search_articles=json_search(key);
 
-    }
+    };
+
     json_search=function(search)
     {
         /*
@@ -409,6 +459,46 @@ function epaperCtrl($scope,$resource,$location,$window)
         return result;
 
     }
+
+    $scope.advanced_search=function()
+    {
+
+        var key=$scope.advanced_search_key;
+        var search_edition=$scope.advanced_search_edition;
+        var search_date=$scope.advanced_search_date;
+        //alert(key+search_edition+search_date);
+        //handle the search with nodjs
+        var search=
+        {
+            key:key,
+            edition:search_edition,
+            date:search_date
+        };
+
+        $resource('/api/advanced_search').get(search, function(data1){
+            var key=Object.keys(data1);
+            for(var i=0;i<key.length;i++)
+                alert(key[i]);
+            //succes handler
+            alert("success");
+
+        }, function(){
+            //error
+            alert("errro");
+        });
+    };
+    advanced_search_success=function(data)
+    {
+        alert("succes");
+        //alert(data.length);
+    }
+
+    advanced_search_fail=function()
+    {
+           alert("fail");
+
+    }
+
     close_search_results=function(){
         $('.search-result-container').hide();
     }

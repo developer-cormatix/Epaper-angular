@@ -95,15 +95,20 @@ margin-right:50px;}
 
 
 
-.search_form{
+.search-container{
     max-width: 230px;
-    height:60px;
+    height:80px;
     margin: 0 auto;
     padding-top: 10px;
     background-color:#e1e1e1;
     border-radius: 6px;
     box-shadow: 3px 3px 2px 2px #a6a6a6;
 }
+.advanced-search-button {
+    width: 230px;
+}
+
+
 
 .form-control input {
     width:120px;
@@ -143,5 +148,15 @@ margin-right:50px;}
     transition: width 5s;}
 
 .image_container{
-    transition: width 5s;}
+    transition: width 5s;
+}
+.advanced-search-container{
+    max-width: 300px;
+    height:200px;
+    margin: 0 auto;
+    padding-top: 10px;
+    background-color:#e1e1e1;
+    border-radius: 6px;
+    box-shadow: 3px 3px 2px 2px #a6a6a6;
+    text-align: center;
 }
