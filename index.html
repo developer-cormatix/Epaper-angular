@@ -121,8 +121,8 @@
 
 
                                 <div id="loadImg" style="position: relative">
-
-                                    <img src="{{page_image}}"  class="mainimage-border" style="position: absolute;left: 0px;top: 0px"  >
+                                    <img src="2014/09/30/30092014_3.jpeg" id="flip_page" style="position: absolute;left: 0px;top: 0px"></img>
+                                    <img src="{{page_image}}" id="main_image"  class="mainimage-border" style="position: absolute;left: 0px;top: 0px"  >
                                     <div class="zoning" ng-repeat="article in current_page.articles">
                                         <div class="boundaries" ng-repeat="coord in article.coords" >
                                             <div id="zones" class="{{article.article_no}}" style="left:{{coord[0]}}px;top:{{coord[1]}}px; height: {{coord[2]}}px; width: {{coord[3]}}px;position:absolute;" ng-click="load_article(article)" onmouseover='highlight(this.className)' onmouseout="unhighlight(this.className)"></div>

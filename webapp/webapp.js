@@ -24,9 +24,11 @@ function epaperCtrl($scope,$resource,$location,$window)
     $scope.mydate=$scope.dates[0];
     $scope.pages;// contains all pages of a section
     $scope.path_name;//the path name for finding files
+    var original_path_name;
     $scope.page_image;
     $scope.current_page;
     $scope.text="connecting";
+    var valid_flip;
 
     //load dates for corresponding edition
     function get_dates()
@@ -145,6 +147,7 @@ function epaperCtrl($scope,$resource,$location,$window)
             if(date_json[k]["section_name"]==section)
             {
                 $scope.path_name=date_json[k]["path"];
+                original_path_name=date_json[k]["path"];
                 //alert("section matched");
                 $scope.pages=date_json[k]["pages"];
 
@@ -166,8 +169,25 @@ function epaperCtrl($scope,$resource,$location,$window)
         //loads the page content from given thumbnail
         //alert("load page");
         //alert(a);
+        var page_flip=$scope.page_image;
+        $("#loadImg").append('<img src="'+page_flip+'" id="flip_image" style="position: absolute;left: 0px;top: 0px"></img>')
+        var image_width=$("#flip_image").width();
+        var image_height=$("#flip_image").height();
+        var myInterval = setInterval(function() {
+
+            image_width=image_width-100;
+
+            if(image_width>=0 )
+                $('#flip_image').css({"width":image_width,"height":image_height});
+            else
+            {
+                window.clearInterval(myInterval);
+                $("#flip_image").remove();
+            }
+        }, 50);
         $scope.current_page=a;
         $scope.page_image=$scope.path_name+a.image;
+
     }
 
     $scope.load_page=function(){
@@ -209,12 +229,14 @@ function epaperCtrl($scope,$resource,$location,$window)
                 $scope.current_page=$scope.pages[k];
                 $scope.page_image=$scope.path_name+$scope.current_page['image'];
                 flag=true;
+                valid_flip=true;
                 return;
                // alert($scope.path_name+$scope.current_page['image']);
             }
         }
         if(!flag)
         {
+            valid_flip=false;
             if(page_no==0)
                 alert("You are viewing the first page!")
             else
@@ -222,16 +244,59 @@ function epaperCtrl($scope,$resource,$location,$window)
         }
     }
 
+    function flipaction()
+    {
+        image_width=image_width-100;
+        alert(timer_var);
+        if(image_width>=0)
+            $('#main_image').css({"width":image_width,"height":image_height});
+        else
+        {
+
+            //clear the interval
+            // alert("clear");
+            $('#main_image').css({"width":'',"height":''});
+           /* var current_page=$scope.current_page.page_no;
+            current_page++;
+          //  alert(current_page);
+            //alert(current_page);
+            search_for_page_no(current_page);*/
+            timer_var=clearInterval(timer_var);
+            alert(timer_var);
+
+            //load the next pge
+        }
+
+    }
+
     $scope.next_page=function()
     {
+       // alert(JSON.stringify($scope.current_page));
         /*
         funciton handling next button clicks
          */
+
+        //create  a temp image
+       // alert($scope.page_image);
+        var page_flip=$scope.page_image
+        $("#loadImg").append('<img src="'+page_flip+'" id="flip_image" style="position: absolute;left: 0px;top: 0px"></img>')
+        var image_width=$("#flip_image").width();
+        var image_height=$("#flip_image").height();
+        var myInterval = setInterval(function() {
+
+            image_width=image_width-100;
+
+            if(image_width>=0 && valid_flip)
+                $('#flip_image').css({"width":image_width,"height":image_height});
+            else
+            {
+                window.clearInterval(myInterval);
+                $("#flip_image").remove();
+            }
+        }, 50);
         var current_page=$scope.current_page.page_no;
-        //alert(current_page);
         current_page++;
         search_for_page_no(current_page);
-       // $(".mainimage-border").css('width','none');
     }
 
     $window.highlight=function(a)
@@ -256,13 +321,39 @@ function epaperCtrl($scope,$resource,$location,$window)
         /*
          funciton handling previos page button clicks
          */
+        //create a atemp element
+        var page_flip=$scope.page_image;
+        $("#loadImg").append('<img src="'+page_flip+'" id="flip_image" style="position: absolute;left: 0px;top: 0px"></img>')
+        var image_width=$("#flip_image").width();
+        var image_height=$("#flip_image").height();
+        var hspace_prop=0;//$("#flip_image").hspace();
+        var myInterval = setInterval(function() {
+
+            image_width=image_width-100;
+            hspace_prop=hspace_prop+100;
+
+            if(image_width>=0 && valid_flip)
+                $('#flip_image').css({"width":image_width,"height":image_height,"left":hspace_prop});
+            else
+            {
+                window.clearInterval(myInterval);
+                $("#flip_image").remove();
+            }
+        }, 50);
         var current_page=$scope.current_page.page_no;
         current_page--;
         search_for_page_no(current_page);
     }
     $scope.load_article=function(article)
     {
-
+       if(article.path_name)
+        {
+            $scope.path_name=article.path_name;
+        }
+        else
+        {
+            $scope.path_name=original_path_name;
+        }
         var image_file=$scope.path_name+article["jpeg"];
         var pdf_file=$scope.path_name+article["pdf"];
         var myWindow = window.open('','', 'width=500,height=500,scrollbars=1');
@@ -285,7 +376,10 @@ function epaperCtrl($scope,$resource,$location,$window)
 
         // load article id to db
         $resource('/api/article').save({article_id: article["article_no"]}, function () {
-            alert("loadled");
+
+        },function(err)
+        {
+            console.log("Error in writing user clickstream to db ");
         });
 
 
@@ -391,10 +485,9 @@ function epaperCtrl($scope,$resource,$location,$window)
     {
         $('.advanced-search-container').toggle();
         $('.search-container').hide();
-        var search_editions=$scope.editions;
+        var search_editions=$scope.editions.slice(0);
         search_editions.push("All");
         $scope.search_editions=search_editions;
-
         $scope.advanced_search_edition=$scope.search_editions[$scope.search_editions.length-1];
         get_dates_for_edition($scope.search_editions[0]);
 
@@ -476,15 +569,38 @@ function epaperCtrl($scope,$resource,$location,$window)
         };
 
         $resource('/api/advanced_search').get(search, function(data1){
-            var key=Object.keys(data1);
-            for(var i=0;i<key.length;i++)
-                alert(key[i]);
-            //succes handler
-            alert("success");
+            console.log("success");
 
-        }, function(){
+            if(data1['result']) {
+                if(data1['result'].length>0)
+                {
+                    alert("keyword found");
+                    $scope.search_articles=data1['result'];
+
+                }
+                else
+                {
+                    // given keyword not present
+                    $scope.search_articles=[];
+                    alert("keyword not found");
+                }
+                $('.search-result-container').show();
+                $('.advanced-search-container').hide();
+
+
+            }
+            else
+            {
+                alert("Search is unable to complete .Please try again later");
+
+            }
+
+
+
+        }, function(e){
             //error
             alert("errro");
+            alert(e);
         });
     };
     advanced_search_success=function(data)

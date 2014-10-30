@@ -1,3 +1,8 @@
+/**
+ * Created by kiran on 30/10/14.
+ */
+
+
 var config = require(__dirname + '/config.js');
 var database = require(__dirname + '/database/database.js');
 

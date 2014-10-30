@@ -1,3 +1,7 @@
+/**
+ * Created by kiran on 30/10/14.
+ */
+
 // Replace here with your MongoDB server address
 exports.database = "mongodb://localhost/epaper";
 exports.port = 3000;

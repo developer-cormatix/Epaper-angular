@@ -7,14 +7,19 @@
   },
   {
     "date"	:"25092014",
-    "file_name" : "30092014.json",
+    "file_name" : "25092014.json",
     "path"	:"2014/09/30"
   }]
 },
 {
   "edition" : "CHN",
-  "dates":[{
-    "date"	:"30092014",
+   "dates":[{
+    "date"	:"20092014",
+    "file_name" : "30092014.json",
+    "path"	:"2014/09/30"
+  },
+  {
+    "date"	:"15092014",
     "file_name" : "30092014.json",
     "path"	:"2014/09/30"
   }]

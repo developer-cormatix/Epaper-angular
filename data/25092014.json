@@ -1,0 +1,212 @@
+{
+  "date" : "25092014",
+  "edition" : "BLR",
+  "section" : [{
+    "section_name" : "main_article",
+    "path" : "2014/09/25/",
+    "pages" : [
+      {
+        "page_no" : "1",
+        "thumbnail" : "25092014_1.jpeg",
+        "image" : "25092014_1.jpeg",
+    	"pdf" : "25092014_1.pdf",
+    	"articles" : [
+      		{
+        	"article_no" : "1.1",
+        	"article_txt" : "sdfsdfs'/;<img src=''/>sdfsdfs",
+        	"jpeg" : "25092014_1p_1a.jpeg",
+        	"pdf" : "25092014_1p_1a.pdf",
+		"coords":[[46,70,115,176]],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "1.2",
+        	"article_txt" : "Some Text hello",
+        	"jpeg" : "25092014_1p_2a.jpeg",
+        	"pdf" : "25092014_1p_2a.pdf",
+		"coords":[[43,206,592,180]],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "1.3",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_1p_3a.jpeg",
+        	"pdf" : "25092014_1p_3a.pdf",
+		"coords":[[46,882,104,91],[138,880,106,99],[46,852,31,109]],
+		"link" : "3.1"
+      		},
+		{
+        	"article_no" : "1.4",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_1p_4a.jpeg",
+        	"pdf" : "25092014_1p_4a.pdf",
+		"coords":[[259,503,483,111],[260,396,103,317],[371,763,29,322],[260,364,28,324],[590,72,416,129],[264,72,289,316],[373,507,255,317],[369,793,193,325]],
+		"link" : "3.1"
+      		}]
+      },
+      {
+        "page_no" : "2",
+        "thumbnail" : "25092014_2.jpeg",
+        "image" : "25092014_2.jpeg",
+    	"pdf" : "25092014_2.pdf",
+    	"articles" : [
+      		{
+        	"article_no" : "2.1",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_2p_1a.jpeg",
+        	"pdf" : "25092014_2p_1a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "2.2",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_2p_2a.jpeg",
+        	"pdf" : "25092014_2p_2a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "2.3",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_2p_3a.jpeg",
+        	"pdf" : "25092014_2p_3a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		}]
+      },
+      {
+        "page_no" : "3",
+        "thumbnail" : "25092014_3.jpeg",
+        "image" : "25092014_3.jpeg",
+    	"pdf" : "25092014_3.pdf",
+    	"articles" : [
+      		{
+        	"article_no" : "3.1",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_3p_1a.jpeg",
+        	"pdf" : "25092014_3p_1a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "3.2",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_3p_2a.jpeg",
+        	"pdf" : "25092014_3p_2a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "3.3",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_3p_3a.jpeg",
+        	"pdf" : "25092014_3p_3a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		}]
+      }
+      ]
+  },
+  {
+    "section_name" : "sub-articles",
+    "path" : "2014/09/25/",
+    "pages" : [
+      {
+        "page_no" : "1",
+        "thumbnail" : "25092014_4.jpeg",
+        "image" : "25092014_4.jpeg",
+    	"pdf" : "25092014_1.pdf",
+    	"articles" : [
+      		{
+        	"article_no" : "1.1",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_1p_1a.jpeg",
+        	"pdf" : "25092014_1p_1a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "1.2",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_1p_2a.jpeg",
+        	"pdf" : "25092014_1p_2a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "1.3",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_1p_3a.jpeg",
+        	"pdf" : "25092014_1p_3a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		}]
+      },
+      {
+        "page_no" : "2",
+        "thumbnail" : "25092014_2.jpeg",
+        "image" : "25092014_2.jpeg",
+    	"pdf" : "25092014_2.pdf",
+    	"articles" : [
+      		{
+        	"article_no" : "2.1",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_2p_1a.jpeg",
+        	"pdf" : "25092014_2p_1a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "2.2",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_2p_2a.jpeg",
+        	"pdf" : "25092014_2p_2a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "2.3",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_2p_3a.jpeg",
+        	"pdf" : "25092014_2p_3a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		}]
+      },
+      {
+        "page_no" : "3",
+        "thumbnail" : "25092014_3.jpeg",
+        "image" : "25092014_3.jpeg",
+    	"pdf" : "25092014_3.pdf",
+    	"articles" : [
+      		{
+        	"article_no" : "3.1",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_3p_1a.jpeg",
+        	"pdf" : "25092014_3p_1a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "3.2",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_3p_2a.jpeg",
+        	"pdf" : "25092014_3p_2a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		},
+      		{
+        	"article_no" : "3.3",
+        	"article_txt" : "Some Text",
+        	"jpeg" : "25092014_3p_3a.jpeg",
+        	"pdf" : "25092014_3p_3a.pdf",
+		"coords":[],
+		"link" : "3.1"
+      		}]
+      }
+      ]
+  }]
+}
+
+
